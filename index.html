@@ -248,7 +248,7 @@ body { background:var(--bg); color:var(--text);
     <input type="date" class="text-input" id="new-event-date">
     <div class="modal-actions">
       <button class="btn btn-secondary" onclick="closeModal('event-modal')">Cancel</button>
-      <button class="btn btn-primary" onclick="createEvent()">Create Event</button>
+      <button class="btn btn-primary" onclick="addNewEvent()">Create Event</button>
     </div>
   </div>
 </div>
@@ -620,7 +620,7 @@ async function onEventChange(){ await store.setActiveEvent(document.getElementBy
   renderList(); updateStats(); buildAZSidebar(); }
 function showNewEventModal(){ document.getElementById('new-event-title').value='';
   document.getElementById('new-event-date').value=todayISO(); openModal('event-modal'); }
-async function createEvent(){
+async function addNewEvent(){
   const title=document.getElementById('new-event-title').value.trim();
   const date=document.getElementById('new-event-date').value||todayISO();
   if(!title){ showToast('Enter a title'); return; }
