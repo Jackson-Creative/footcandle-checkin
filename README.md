@@ -1,62 +1,50 @@
 # Footcandle Film Society — Check-in App
 
-This is the live check-in application for Footcandle Film Society, powered by Supabase.
+The door check-in app for Footcandle Film Society screenings. It runs on iPads, syncs
+live across devices through Supabase, and shares its member data with the
+[members portal](https://github.com/Jackson-Creative/footcandle-members-portal).
 
 ## Files
 
-- `index.html` — the check-in app (this is checkin-live.html)
-- `vercel.json` — Vercel deployment config
+- `index.html` — the entire app (HTML, CSS and JavaScript in one file)
+- `vercel.json` — static-site config for Vercel
+- `VERCEL-DEPLOY.md` — first-time Vercel setup walkthrough
+- `CLAUDE.md` — technical notes for Claude Code sessions
 
-## Deployment to Vercel
+## Using the app
 
-### Option A: From GitHub (Recommended)
+1. Open the site on an iPad and **Add to Home Screen**.
+2. Members load automatically from the shared database (kept current by the nightly
+   Eventive sync). Tap 👥 to import an Eventive CSV export as a backup — check-in history
+   is preserved.
+3. Tap **📅 + Event** to create a screening, or pick one from the dropdown.
+4. Tap a member's name to check them in (tap again to undo). Use search, the A–Z bar
+   and the status filters to find people quickly.
+5. Tap 📊 for attendance history across all events.
 
-1. **Create a GitHub repository** (or push this folder to an existing one)
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial commit: Footcandle check-in app"
-   git push -u origin main
-   ```
-
-2. **Connect to Vercel**
-   - Go to vercel.com, sign in to your account
-   - Click "Add New" → "Project"
-   - Select the GitHub repo containing this folder
-   - Vercel auto-detects it's a static site — no build needed
-   - Click "Deploy"
-   - Your app is live at `https://[project-name].vercel.app`
-
-3. **Set a custom domain** (optional)
-   - In Vercel project settings → Domains
-   - Add `checkin.footcandle.org` or similar
-   - Follow DNS instructions
-
-### Option B: Direct Upload (Fastest)
-
-1. Go to vercel.com, sign in
-2. Click "Add New" → "Project"
-3. Under "Create From Git" section, scroll down to "Don't want to use Git?"
-4. Select "Upload" and drag this folder into Vercel
-5. Deploy — live in seconds
+Check-ins appear on every iPad in real time.
 
 ## Configuration
 
-The app comes pre-configured with Supabase credentials:
+The Supabase connection is in the `CONFIG` block at the top of `index.html`:
+
 - `SUPABASE_URL`: `https://rcjvdvyaqfpbqjunmqjf.supabase.co`
-- `SUPABASE_ANON_KEY`: `sb_publishable_DUPpA49gmzLkJzv4bGNv6A_adAwJXFl`
+- `SUPABASE_ANON_KEY`: the project's publishable key
 
-These are in the CONFIG block at the top of `index.html`. They're safe (anon key only has read/write access to check-ins per RLS policies).
+The publishable key is safe in the browser; access is limited by Supabase row-level
+security. If Supabase isn't configured, the app falls back to storing data on that
+device only (`localStorage`).
 
-## Using the App
+Tables used: `members`, `events`, `checkins` (shared with the members portal).
 
-1. Open on iPad and add to Home Screen
-2. Tap 👥 to load members (or wait for nightly Eventive sync)
-3. Tap "📅 + Event" to create a screening
-4. Tap member names to check them in
-5. 📊 shows attendance history across all events
-6. Check-ins sync live across all devices (when in Live mode with Supabase)
+## Deployment
 
-## Questions?
+The app is a static site on Vercel, connected to this GitHub repo. **Pushing to `main`
+deploys to production** — there's no build step. See `VERCEL-DEPLOY.md` for first-time
+setup and custom-domain instructions.
 
-See `SETUP-COMPLETE.md` and `SETUP-Going-Live.md` in the project folder for full documentation.
+## Making changes
+
+There are no automated tests. Before merging, open `index.html` in a browser and check
+loading members, creating an event, checking someone in and out, the CSV import, and the
+iPad layout. Note that it connects to the **live** database.
